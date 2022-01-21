@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+.container {
+  background-color: #c7c7c7;
+  min-height: 100vh;
+  padding: 1rem;
+  min-width: 100vw;
+  width: max-content;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+}
+
+table {
+  border-spacing: 0;
+  border: 1px solid black;
+  margin-bottom: 0.5rem;
+
+  tr {
+    :last-child {
+      td {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  th,
+  td {
+    margin: 0;
+    padding: 0.5rem;
+    //border-bottom: 1px solid black;
+    border-right: 1px solid black;
+  }
+
+  th {
+    background-color: #c7c7c7;
+    border-bottom: 1px solid black;
+    position: sticky;
+    top: 0;
+  }
+}
+
+.action-buttons {
+  padding: 0.5rem;
+  display: flex;
+  flex-wrap: nowrap;
+
+  button:first-child {
+    margin-right: 0.5rem;
+  }
+}
+
+.page-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.page-buttons__prev {
+  margin-right: 0.5rem;
+}
+
+.page-buttons__numbers {
+  display: flex;
+}
+
+.page-buttons__numbers__number {
+  margin-right: 0.25rem;
+  :last-child {
+    margin-right: 0;
+  }
+}
+
+.page-buttons__next {
+  margin-left: 0.5rem;
+}

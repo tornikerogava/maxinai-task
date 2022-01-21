@@ -1,4 +1,5 @@
 import {useTable} from "react-table"
+import "../index.scss"
 
 interface User {
     id: string
@@ -18,8 +19,8 @@ function Table({
     onEdit: any
     onDelete: any
 }) {
-    //   const data = useMemo(() => usersData, []);
-    //   const columns = useMemo(() => usersColumns, []);
+
+
     const table = useTable({
         columns,
         data,
@@ -29,8 +30,8 @@ function Table({
 
 
     return (
-        <table {...getTableProps()}>
-            <thead>
+        <table className="table" {...getTableProps()}>
+            <thead className="table__head">
             {
                 // Loop over the header rows
                 headerGroups.map((headerGroup) => (
@@ -40,7 +41,7 @@ function Table({
                             // Loop over the headers in each row
                             headerGroup.headers.map((column) => (
                                 // Apply the header cell props
-                                <th {...column.getHeaderProps()}>
+                                <th className="table__head__cell" {...column.getHeaderProps()}>
                                     {
                                         // Render the header
                                         column.render("Header")
@@ -53,7 +54,7 @@ function Table({
             }
             </thead>
             {/* Apply the table body props */}
-            <tbody {...getTableBodyProps()}>
+            <tbody  {...getTableBodyProps()}>
             {
                 // Loop over the table rows
                 rows.map((row) => {
@@ -67,7 +68,7 @@ function Table({
                                 row.cells.map((cell) => {
                                     // Apply the cell props
                                     return (
-                                        <td {...cell.getCellProps()}>
+                                        <td className="table__cell" {...cell.getCellProps()}>
                                             {
                                                 // Render the cell contents
                                                 cell.render("Cell")
@@ -76,8 +77,10 @@ function Table({
                                     )
                                 })
                             }
-                            <button onClick={() => onEdit(row.values.id)}>Edit</button>
-                            <button onClick={() => onDelete(row.values.id)}>Delete</button>
+                            <div className="action-buttons">
+                                <button onClick={() => onEdit(row.values.id)}>Edit</button>
+                                <button onClick={() => onDelete(row.values.id)}>Delete</button>
+                            </div>
                         </tr>
                     )
                 })
