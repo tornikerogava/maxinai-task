@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const fetchUserList = () => {
 
+export const fetchUserList = () => {
     return (dispatch: any) => {
         axios.get("/data/im-a-real-api.json").then(response => {
             dispatch({
@@ -12,10 +12,8 @@ export const fetchUserList = () => {
     }
 }
 
-// TODO: change type on allUsers?
-export const getCurrentPageUsers = (allUsers: any, page: number, perPage: number) => {
+export const getCurrentPageUsers = (allUsers: any[], page: number, perPage: number) => {
     const offset = (page - 1) * perPage
-
     return (dispatch: any) => {
         dispatch({
             type: "GET_PAGE_USERS",

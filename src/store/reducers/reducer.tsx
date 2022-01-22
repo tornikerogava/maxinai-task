@@ -43,13 +43,11 @@ const reducer = (state = initialState, action: action ) => {
         case "EDIT_USER":
             return{
                 ...state,
-                allUsers: state.allUsers.map((user: User)=> user.id === action.payload.id? action.payload : user)
+                allUsers: state.allUsers.map((user: User)=> user.id === action.payload.id ? action.payload : user)
             }
-
         default:
             return state
     }
-
 }
 
 export default reducer

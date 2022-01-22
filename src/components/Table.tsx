@@ -21,27 +21,27 @@ function Table({
 }) {
 
 
-    const table = useTable({
+    const Table = useTable({
         columns,
         data,
     })
 
-    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table
+    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = Table
 
 
     return (
-        <table className="table" {...getTableProps()}>
-            <thead className="table__head">
+        <table  {...getTableProps()}>
+            <thead >
             {
                 // Loop over the header rows
-                headerGroups.map((headerGroup) => (
+                headerGroups.map((headerGroup,index) => (
                     // Apply the header row props
-                    <tr {...headerGroup.getHeaderGroupProps()}>
+                    <tr  {...headerGroup.getHeaderGroupProps()}>
                         {
                             // Loop over the headers in each row
-                            headerGroup.headers.map((column) => (
+                            headerGroup.headers.map((column,index) => (
                                 // Apply the header cell props
-                                <th className="table__head__cell" {...column.getHeaderProps()}>
+                                <th  {...column.getHeaderProps()}>
                                     {
                                         // Render the header
                                         column.render("Header")
@@ -57,7 +57,7 @@ function Table({
             <tbody  {...getTableBodyProps()}>
             {
                 // Loop over the table rows
-                rows.map((row) => {
+                rows.map((row,index) => {
                     // Prepare the row for display
                     prepareRow(row)
                     return (
@@ -65,10 +65,10 @@ function Table({
                         <tr  {...row.getRowProps()}>
                             {
                                 // Loop over the rows cells
-                                row.cells.map((cell) => {
+                                row.cells.map((cell,index) => {
                                     // Apply the cell props
                                     return (
-                                        <td className="table__cell" {...cell.getCellProps()}>
+                                        <td {...cell.getCellProps()}>
                                             {
                                                 // Render the cell contents
                                                 cell.render("Cell")
@@ -77,10 +77,10 @@ function Table({
                                     )
                                 })
                             }
-                            <div className="action-buttons">
+                            <td className="action-buttons">
                                 <button onClick={() => onEdit(row.values.id)}>Edit</button>
                                 <button onClick={() => onDelete(row.values.id)}>Delete</button>
-                            </div>
+                            </td>
                         </tr>
                     )
                 })

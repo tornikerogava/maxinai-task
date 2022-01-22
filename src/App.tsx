@@ -1,13 +1,12 @@
 import {useEffect, useState} from "react"
 import './index.scss'
-import Table from "./components/table"
+import Table from "./components/Table"
 import Modal from 'react-modal'
 import {useDispatch, useSelector} from "react-redux"
 import {fetchUserList, getCurrentPageUsers, changePage, deleteUser, editUser} from "./store/actions/actions"
 
 
 function App() {
-    const [data, setData] = useState<User[]>([])
     const [columns, setColumns] = useState<any>([])
     const [editModalIsOpen, setEditModalIsOpen] = useState(false)
     const [currentEdit, setCurrentEdit] = useState<User>()
@@ -27,6 +26,9 @@ function App() {
         email: string
     }
 
+
+    //this fetches the entire list of users and saves it to a store, I only do this to be able to edit and save
+    //the users, since there is no backend
     useEffect(() => {
         dispatch(fetchUserList())
         setColumns(
@@ -46,7 +48,10 @@ function App() {
         )
     }, [])
 
+
+    // this fetches the actual batch of users that is displayed on the current page
     useEffect(() => {
+        window.scrollTo(0, 0)
         dispatch(getCurrentPageUsers(allUsers, currentPage, perPage))
         setNumberOfPages(Math.ceil(allUsers.length / perPage))
     }, [allUsers, currentPage])
@@ -78,7 +83,7 @@ function App() {
 
 
     ///////// MODAL
-    const customStyles = {
+    const modalStyles = {
         content: {
             top: '50%',
             left: '50%',
@@ -89,42 +94,41 @@ function App() {
         },
     }
 
-    let subtitle: any
-
-
-    function afterOpenModal() {
-        subtitle.style.color = '#f00'
-    }
-
     function closeModal() {
         setEditModalIsOpen(false)
         setDeleteModalOpen(false)
     }
 
     //// MODAL END
+    const pagesArray = [...Array(numberOfPages).keys()]
 
 
     return (
         <div className="container">
             <div className="app">
+
                 <Table
                     onEdit={onEdit}
                     onDelete={onDelete}
                     usersColumns={columns}
                     usersData={currentPageUsers}
                 />
-                <div className="page-buttons">
-                    <button className="page-buttons__prev" disabled={currentPage == 1} onClick={() => dispatch(changePage(currentPage - 1))}>prev</button>
-                   <div className="page-buttons__numbers">
-                       {
-                           [...Array(numberOfPages).keys()].map((i) => {
 
-                               return <button className="page-buttons__numbers__number" disabled={currentPage === i + 1}
-                                              onClick={() => dispatch(changePage(i + 1))}>{i + 1}</button>
-                           })
-                       }
-                   </div>
-                    <button className="page-buttons__next" disabled={currentPage == numberOfPages}
+                <div className="page-buttons">
+                    <button className="page-buttons__prev" disabled={currentPage === 1}
+                            onClick={() => dispatch(changePage(currentPage - 1))}>prev
+                    </button>
+                    <div className="page-buttons__numbers">
+                        {
+                            pagesArray.map((i,) => {
+                                return <button key={i+1}
+                                               className="page-buttons__numbers__number"
+                                               disabled={currentPage === i + 1}
+                                               onClick={() => dispatch(changePage(i + 1))}>{i + 1}</button>
+                            })
+                        }
+                    </div>
+                    <button className="page-buttons__next" disabled={currentPage === numberOfPages}
                             onClick={() => dispatch(changePage(currentPage + 1))}>next
                     </button>
                 </div>
@@ -133,71 +137,80 @@ function App() {
                     <Modal
                         isOpen={editModalIsOpen}
                         onRequestClose={closeModal}
-                        style={customStyles}
+                        style={modalStyles}
                         shouldCloseOnOverlayClick={false}
                         contentLabel="Edit Modal"
+                        ariaHideApp={false}
                     >
-                        <h2 ref={_subtitle => (subtitle = _subtitle)}>Edit User</h2>
-                        <div>
-                            <label>First Name</label>
-                            <input
-                                type="text"
-                                value={currentEdit.first_name}
-                                onChange={(e) => {
-                                    setCurrentEdit({...currentEdit, first_name: e.target.value})
-                                }}
-                            />
+                        <h2 className="modal__title edit-modal__title">Edit User</h2>
+                        <div className="edit-modal__inputs">
+                            <div className="edit-modal__input-container">
+                                <label className="edit-modal__label">First Name</label>
+                                <input
+                                    className="edit-modal__input"
+                                    type="text"
+                                    value={currentEdit.first_name}
+                                    onChange={(e) => {
+                                        setCurrentEdit({...currentEdit, first_name: e.target.value})
+                                    }}
+                                />
+                            </div>
+                            <div className="edit-modal__input-container">
+                                <label className="edit-modal__label">Last Name</label>
+                                <input
+                                    className="edit-modal__input"
+                                    type="text"
+                                    value={currentEdit.last_name}
+                                    onChange={(e) => {
+                                        setCurrentEdit({...currentEdit, last_name: e.target.value})
+                                    }}
+                                />
+                            </div>
+                            <div className="edit-modal__input-container">
+                                <label className="edit-modal__label">Email</label>
+                                <input
+                                    className="edit-modal__input"
+                                    type="text"
+                                    value={currentEdit.email}
+                                    onChange={(e) => {
+                                        setCurrentEdit({...currentEdit, email: e.target.value})
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <label>Last Name</label>
-                            <input
-                                type="text"
-                                value={currentEdit.last_name}
-                                onChange={(e) => {
-                                    setCurrentEdit({...currentEdit, last_name: e.target.value})
-                                }}
-                            />
+                        <div className="modal__buttons edit-modal__buttons">
+                            <button onClick={() => closeModal()}>cancel</button>
+                            <button onClick={() => {
+                                if (!currentEdit.first_name.length || !currentEdit.last_name.length || !currentEdit.email.length) {
+                                    alert("Please Fill in All Fields")
+                                } else {
+                                    dispatch(editUser(currentEdit))
+                                    closeModal()
+                                }
+                            }}>Save
+                            </button>
                         </div>
-                        <div>
-                            <label>Email</label>
-                            <input
-                                type="text"
-                                value={currentEdit.email}
-                                onChange={(e) => {
-                                    setCurrentEdit({...currentEdit, email: e.target.value})
-                                }}
-                            />
-                        </div>
-                        <button onClick={() => closeModal()}>cancel</button>
-                        <button onClick={() => {
-                            if (!currentEdit.first_name.length || !currentEdit.last_name.length || !currentEdit.email.length) {
-                                alert("Please Fill in All Fields")
-                            } else {
-                                dispatch(editUser(currentEdit))
-                                closeModal()
-                            }
-                        }}>Save
-                        </button>
                     </Modal>)}
+                <Modal
+                    isOpen={deleteModalOpen}
+                    onRequestClose={closeModal}
+                    style={modalStyles}
+                    shouldCloseOnOverlayClick={false}
+                    contentLabel="Delete Modal"
+                    ariaHideApp={false}
 
-                    <Modal
-                        isOpen={deleteModalOpen}
-                        onRequestClose={closeModal}
-                        style={customStyles}
-                        shouldCloseOnOverlayClick={false}
-                        contentLabel="Delete Modal"
-                    >
-                        <h2 ref={_subtitle => (subtitle = _subtitle)}>Delete User?</h2>
-                        <h3> {currentEdit?.first_name} {currentEdit?.last_name}</h3>
-
+                >
+                    <h2 className="modal__title delete-modal__title">Delete User?</h2>
+                    <h3 className="delete-modal__user"> {currentEdit?.first_name} {currentEdit?.last_name}</h3>
+                    <div className="modal__buttons delete-modal__buttons">
                         <button onClick={() => closeModal()}>cancel</button>
                         <button onClick={() => {
                             dispatch(deleteUser(currentEdit?.id))
                             closeModal()
                         }}>Delete
                         </button>
-
-                    </Modal>
+                    </div>
+                </Modal>
             </div>
 
         </div>
