@@ -19,6 +19,18 @@ function App() {
     const currentPage = useSelector((state: any) => state.reducer.currentPage)
     const currentPageUsers = useSelector((state: any) => state.reducer.currentPageUsers)
 
+    const pagesArray = [...Array(numberOfPages).keys()]
+    const modalStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+        },
+    }
+
     interface User {
         id: number
         first_name: string
@@ -59,7 +71,6 @@ function App() {
 
     const getUserByID = (id: number) => {
         let index = 0
-
         for (let i = 0; i < allUsers.length; i++) {
             if (allUsers[i].id === id) {
                 index = i
@@ -81,26 +92,10 @@ function App() {
         setDeleteModalOpen(true)
     }
 
-
-    ///////// MODAL
-    const modalStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-        },
-    }
-
-    function closeModal() {
+    const closeModal = () => {
         setEditModalIsOpen(false)
         setDeleteModalOpen(false)
     }
-
-    //// MODAL END
-    const pagesArray = [...Array(numberOfPages).keys()]
 
 
     return (
@@ -121,7 +116,7 @@ function App() {
                     <div className="page-buttons__numbers">
                         {
                             pagesArray.map((i,) => {
-                                return <button key={i+1}
+                                return <button key={i + 1}
                                                className="page-buttons__numbers__number"
                                                disabled={currentPage === i + 1}
                                                onClick={() => dispatch(changePage(i + 1))}>{i + 1}</button>

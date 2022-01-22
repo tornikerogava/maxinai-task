@@ -20,30 +20,24 @@ function Table({
     onDelete: any
 }) {
 
-
-    const Table = useTable({
+    const table = useTable({
         columns,
         data,
     })
 
-    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = Table
+    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = table
 
 
     return (
         <table  {...getTableProps()}>
-            <thead >
+            <thead>
             {
-                // Loop over the header rows
-                headerGroups.map((headerGroup,index) => (
-                    // Apply the header row props
+                headerGroups.map((headerGroup) => (
                     <tr  {...headerGroup.getHeaderGroupProps()}>
                         {
-                            // Loop over the headers in each row
-                            headerGroup.headers.map((column,index) => (
-                                // Apply the header cell props
+                            headerGroup.headers.map((column) => (
                                 <th  {...column.getHeaderProps()}>
                                     {
-                                        // Render the header
                                         column.render("Header")
                                     }
                                 </th>
@@ -53,24 +47,18 @@ function Table({
                 ))
             }
             </thead>
-            {/* Apply the table body props */}
+
             <tbody  {...getTableBodyProps()}>
             {
-                // Loop over the table rows
-                rows.map((row,index) => {
-                    // Prepare the row for display
+                rows.map((row) => {
                     prepareRow(row)
                     return (
-                        // Apply the row props
                         <tr  {...row.getRowProps()}>
                             {
-                                // Loop over the rows cells
-                                row.cells.map((cell,index) => {
-                                    // Apply the cell props
+                                row.cells.map((cell) => {
                                     return (
                                         <td {...cell.getCellProps()}>
                                             {
-                                                // Render the cell contents
                                                 cell.render("Cell")
                                             }
                                         </td>
